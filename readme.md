@@ -1,0 +1,1 @@
+Coded along with Traversy Media to get an introduction into php using XAMPP to access MySQL Database.

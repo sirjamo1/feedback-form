@@ -20,6 +20,17 @@ if (isset($_POST['submit'])) {
   } else {
     $body = filter_input(INPUT_POST, 'body', FILTER_SANITIZE_SPECIAL_CHARS);
   }
+  //if all errors are empty add to db
+  if (empty($name_err) && empty($email_err) && empty($body_err)) {
+    $sql = "INSERT INTO feedback (name, email, body) VALUES ('$name', '$email', '$body')";
+    if(mysqli_query($conn, $sql)) {
+      //success
+      header('location: feedback.php');
+    } else {
+      //Error
+      echo 'Error: ' . mysqli_error($conn);
+    }
+  }
 }
 
 ?>
@@ -36,11 +47,17 @@ if (isset($_POST['submit'])) {
   </div>
   <div class="mb-3">
     <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+    <input type="email" class="form-control <?php echo $email_err ? 'is-invalid' : null ?>" id="email" name="email" placeholder="Enter your email">
+    <div class="invalid-feedback">
+      <?php echo $email_err ?>
+    </div>
   </div>
   <div class="mb-3">
     <label for="body" class="form-label">Feedback</label>
-    <textarea class="form-control" id="body" name="body" placeholder="Enter your feedback"></textarea>
+    <textarea class="form-control <?php echo $body_err ? 'is-invalid' : null ?>" id="body" name="body" placeholder="Enter your feedback"></textarea>
+    <div class="invalid-feedback">
+      <?php echo $body_err ?>
+    </div>
   </div>
   <div class="mb-3">
     <input type="submit" name="submit" value="Send" class="btn btn-dark w-100">
